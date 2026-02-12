@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas Industrial — Regenerative Compute Infrastructure</title>
+<meta name="description" content="Atlas Industrial converts industrial waste energy into compute infrastructure through thermal symbiosis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600;8..60,700&amp;family=DM+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════
+     CSS VARIABLES
+     ═══════════════════════════════════════ */
+  :root {
+    --navy: #0B1A2B;
+    --navy-mid: #12263E;
+    --navy-light: #1A3352;
+    --amber: #D4923A;
+    --amber-glow: #E8A84C;
+    --amber-dim: #B07A2E;
+    --cream: #F5F0E8;
+    --cream-dark: #E8E0D2;
+    --white: #FAFAF8;
+    --text-primary: #0B1A2B;
+    --text-secondary: #4A5568;
+    --text-light: #CBD5E0;
+    --font-serif: 'Source Serif 4', 'Georgia', serif;
+    --font-sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  /* ═══════════════════════════════════════
+     RESET & BASE
+     ═══════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    background: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  /* ═══════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.4s ease;
+    background: transparent;
+  }
+  nav.scrolled {
+    background: rgba(11, 26, 43, 0.97);
+    padding: 0.75rem 3rem;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .nav-logo {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--cream);
+    letter-spacing: 0.04em;
+  }
+  .nav-logo span { color: var(--amber); }
+  #navLinks {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  #navLinks a {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--cream);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    transition: opacity 0.3s;
+  }
+  #navLinks a:hover { opacity: 1; color: var(--amber); }
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 101;
+  }
+  .nav-hamburger span {
+    width: 24px; height: 2px;
+    background: var(--cream);
+    transition: 0.3s;
+  }
+
+  /* ═══════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════ */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(165deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy-light) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(212, 146, 58, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 60%, rgba(212, 146, 58, 0.04) 0%, transparent 50%);
+    animation: heroGlow 12s ease-in-out infinite alternate;
+  }
+  @keyframes heroGlow {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-3%, 2%) scale(1.05); }
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+  .hero-tagline {
+    font-family: var(--font-serif);
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+  }
+  .hero-tagline em {
+    font-style: normal;
+    color: var(--amber);
+  }
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .hero-cta {
+    display: inline-block;
+    padding: 0.85rem 2.5rem;
+    background: var(--amber);
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .hero-cta:hover {
+    background: var(--amber-glow);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(212, 146, 58, 0.35);
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION UTILITIES
+     ═══════════════════════════════════════ */
+  .section {
+    padding: 6rem 2rem;
+  }
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+  }
+  .section-desc {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    max-width: 650px;
+    line-height: 1.7;
+  }
+
+  /* ═══════════════════════════════════════
+     THERMAL LOOP SECTION
+     ═══════════════════════════════════════ */
+  .loop-section {
+    background: var(--navy);
+    padding: 6rem 2rem;
+    overflow: hidden;
+  }
+  .loop-section .section-label,
+  .loop-section .section-title { color: var(--cream); }
+  .loop-section .section-title em { font-style: normal; color: var(--amber); }
+  .loop-section .section-desc { color: var(--text-light); }
+
+  .loop-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3.5rem auto 0;
+    max-width: 1000px;
+    gap: 4rem;
+  }
+
+  /* SVG Loop */
+  .loop-graphic {
+    flex: 0 0 420px;
+    height: 420px;
+    position: relative;
+  }
+  .loop-svg { width: 100%; height: 100%; }
+
+  /* Animated arrows along path */
+  .arrow-particle {
+    fill: var(--amber);
+    filter: drop-shadow(0 0 4px rgba(212, 146, 58, 0.6));
+  }
+  .loop-path {
+    fill: none;
+    stroke: rgba(212, 146, 58, 0.15);
+    stroke-width: 2;
+  }
+  .loop-path-glow {
+    fill: none;
+    stroke: var(--amber);
+    stroke-width: 2.5;
+    stroke-dasharray: 80 320;
+    animation: loopFlow 6s linear infinite;
+    filter: drop-shadow(0 0 6px rgba(212, 146, 58, 0.4));
+  }
+  @keyframes loopFlow {
+    0% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -400; }
+  }
+
+  .loop-node {
+    text-anchor: middle;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    fill: var(--cream);
+  }
+  .loop-node-circle {
+    fill: rgba(212, 146, 58, 0.12);
+    stroke: var(--amber);
+    stroke-width: 1.5;
+  }
+  .loop-center-label {
+    font-family: var(--font-serif);
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--amber);
+    text-anchor: middle;
+    letter-spacing: 0.12em;
+  }
+  .loop-center-sub {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    fill: var(--text-light);
+    text-anchor: middle;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Loop descriptions */
+  .loop-steps {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .loop-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .loop-step-num {
+    flex: 0 0 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(212, 146, 58, 0.12);
+    border: 1.5px solid var(--amber);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--amber);
+  }
+  .loop-step-text h4 {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 0.25rem;
+  }
+  .loop-step-text p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* ═══════════════════════════════════════
+     VALUE PROPOSITION
+     ═══════════════════════════════════════ */
+  .value-section {
+    background: var(--cream);
+  }
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+    margin-top: 3rem;
+  }
+  .value-card {
+    background: var(--white);
+    padding: 2.25rem;
+    border-radius: 3px;
+    border: 1px solid var(--cream-dark);
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .value-card:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
+  }
+  .value-card-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(212, 146, 58, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+  .value-card-icon svg {
+    width: 22px; height: 22px;
+    stroke: var(--amber);
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .value-card h3 {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+  .value-card p {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ═══════════════════════════════════════
+     ABOUT
+     ═══════════════════════════════════════ */
+  .about-section {
+    background: var(--white);
+  }
+  .about-content {
+    max-width: 700px;
+    margin-top: 2rem;
+  }
+  .about-content p {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+  }
+
+  /* ═══════════════════════════════════════
+     CONTACT
+     ═══════════════════════════════════════ */
+  .contact-section {
+    background: var(--navy);
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+  .contact-section .section-title { color: var(--cream); }
+  .contact-section .section-desc {
+    color: var(--text-light);
+    margin: 0 auto 2rem;
+  }
+  .contact-email {
+    display: inline-block;
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--amber);
+    border-bottom: 1px solid rgba(212, 146, 58, 0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.3s;
+  }
+  .contact-email:hover { border-color: var(--amber); }
+  .contact-phone {
+    display: block;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: var(--text-light);
+    font-weight: 300;
+  }
+
+  /* ═══════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════ */
+  footer {
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: rgba(203, 213, 224, 0.5);
+  }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+     ═══════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .loop-container {
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+    .loop-graphic {
+      flex: 0 0 320px;
+      height: 320px;
+    }
+    .value-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    nav { padding: 1rem 1.5rem; }
+    nav.scrolled { padding: 0.6rem 1.5rem; }
+  }
+  @media (max-width: 640px) {
+    .nav-hamburger { display: flex; }
+    #navLinks {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(11, 26, 43, 0.98);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+    #navLinks.open { display: flex; }
+    #navLinks a { font-size: 1.1rem; }
+    .loop-graphic { flex: 0 0 280px; height: 280px; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.25rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════ -->
+<nav class="scrolled">
+  <div class="nav-logo">ATLAS <span>INDUSTRIAL</span></div>
+  <ul id="navLinks">
+    <li><a href="#model">Model</a></li>
+    <li><a href="#value">Value</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-tagline">Waste Energy In.<br><em>Compute Out.</em></h1>
+    <p class="hero-sub">Atlas Industrial builds compute infrastructure powered by energy that would otherwise be lost — turning industrial waste heat into a productive asset for the digital economy.</p>
+    <a href="#contact" class="hero-cta">Get in Touch</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     THERMAL LOOP
+     ═══════════════════════════════════════ -->
+<section class="loop-section section" id="model">
+  <div class="section-inner" style="text-align:center; margin-bottom: 1rem;">
+    <div class="section-label">The Model</div>
+    <h2 class="section-title"><em>Thermal Symbiosis</em></h2>
+    <p class="section-desc" style="margin: 0 auto;">A closed-loop system where industrial facilities and compute infrastructure become mutually reinforcing — waste from one is fuel for the other.</p>
+  </div>
+  <div class="loop-container">
+    <!-- Animated SVG Loop -->
+    <div class="loop-graphic">
+      <svg class="loop-svg" viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Rounded-rect loop path -->
+          <path id="loopPath" d="
+            M 210 60
+            L 330 60
+            Q 360 60 360 90
+            L 360 200
+            Q 360 230 330 230
+            L 270 230
+            Q 240 230 240 260
+            L 240 330
+            Q 240 360 210 360
+            L 90 360
+            Q 60 360 60 330
+            L 60 220
+            Q 60 190 90 190
+            L 150 190
+            Q 180 190 180 160
+            L 180 90
+            Q 180 60 210 60
+            Z
+          "></path>
+          <!-- Arrow marker -->
+          <marker id="arrowHead" markerWidth="8" markerHeight="6" refX="4" refY="3" orient="auto">
+            <polygon points="0,0 8,3 0,6" fill="#D4923A"></polygon>
+          </marker>
+        </defs>
+
+        <!-- Background path -->
+        <use href="#loopPath" class="loop-path"></use>
+
+        <!-- Animated glow paths (multiple for continuous effect) -->
+        <use href="#loopPath" class="loop-path-glow"></use>
+        <use href="#loopPath" class="loop-path-glow" style="stroke-dashoffset: -200; animation-delay: -3s;"></use>
+
+        <!-- Animated arrow particles along path -->
+        <circle r="5" class="arrow-particle">
+          <animateMotion dur="6s" repeatCount="indefinite">
+            <mpath href="#loopPath"></mpath>
+          </animateMotion>
+        </circle>
+        <circle r="5" class="arrow-particle" style="opacity: 0.7;">
+          <animateMotion dur="6s" repeatCount="indefinite" begin="-2s">
+            <mpath href="#loopPath"></mpath>
+          </animateMotion>
+        </circle>
+        <circle r="5" class="arrow-particle" style="opacity: 0.5;">
+          <animateMotion dur="6s" repeatCount="indefinite" begin="-4s">
+            <mpath href="#loopPath"></mpath>
+          </animateMotion>
+        </circle>
+
+        <!-- Node: CAPTURE (top) -->
+        <circle cx="120" cy="125" r="32" class="loop-node-circle"></circle>
+        <text x="120" y="129" class="loop-node">Capture</text>
+
+        <!-- Node: CONVERT (right) -->
+        <circle cx="300" cy="145" r="32" class="loop-node-circle"></circle>
+        <text x="300" y="149" class="loop-node">Convert</text>
+
+        <!-- Node: POWER (bottom-right) -->
+        <circle cx="300" cy="295" r="32" class="loop-node-circle"></circle>
+        <text x="300" y="299" class="loop-node">Power</text>
+
+        <!-- Node: RETURN (left) -->
+        <circle cx="120" cy="275" r="32" class="loop-node-circle"></circle>
+        <text x="120" y="279" class="loop-node">Return</text>
+
+        <!-- Center label -->
+        <text x="210" y="200" class="loop-center-label">THERMAL</text>
+        <text x="210" y="218" class="loop-center-label">SYMBIOSIS</text>
+      </svg>
+    </div>
+
+    <!-- Step descriptions -->
+    <div class="loop-steps">
+      <div class="loop-step">
+        <div class="loop-step-num">1</div>
+        <div class="loop-step-text">
+          <h4>Capture</h4>
+          <p>Harvest thermal energy that industrial processes currently vent to the atmosphere as waste.</p>
+        </div>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-num">2</div>
+        <div class="loop-step-text">
+          <h4>Convert</h4>
+          <p>Transform captured heat into electricity using proven thermodynamic conversion technology.</p>
+        </div>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-num">3</div>
+        <div class="loop-step-text">
+          <h4>Power</h4>
+          <p>Direct all generated electricity to on-site AI and cloud compute infrastructure.</p>
+        </div>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-num">4</div>
+        <div class="loop-step-text">
+          <h4>Return</h4>
+          <p>Route residual heat from compute cooling back to the industrial partner, closing the loop.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     VALUE PROPOSITION
+     ═══════════════════════════════════════ -->
+<section class="section value-section" id="value">
+  <div class="section-inner">
+    <div class="section-label">Value Creation</div>
+    <h2 class="section-title">Three Partners. One System.</h2>
+    <p class="section-desc">Thermal symbiosis creates measurable value for every participant in the system.</p>
+    <div class="value-grid">
+      <div class="value-card">
+        <div class="value-card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <h3>Industrial Hosts</h3>
+        <p>Monetize waste energy that currently represents a cost center. Generate new revenue from thermal assets you already produce — with zero disruption to core operations.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-card-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        </div>
+        <h3>Compute Customers</h3>
+        <p>Access high-performance compute powered by carbon-free energy at competitive rates — without the permitting delays and grid constraints that limit new capacity.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+        </div>
+        <h3>Communities</h3>
+        <p>Reduce emissions, create high-quality local jobs, and strengthen the regional economy — without new land consumption or grid burden.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ABOUT
+     ═══════════════════════════════════════ -->
+<section class="section about-section" id="about">
+  <div class="section-inner">
+    <div class="section-label">About</div>
+    <h2 class="section-title">Built for the Long Term</h2>
+    <div class="about-content">
+      <p>Atlas Industrial is a compute infrastructure company headquartered in Texas. We develop and operate behind-the-meter microgrids that convert industrial waste energy into compute capacity.</p>
+      <p>Our model eliminates the two biggest constraints facing new compute deployment: power availability and permitting timelines. By co-locating with existing industrial operations, we bring compute online faster, cheaper, and cleaner.</p>
+      <p>We are building Atlas Industrial as durable infrastructure — the kind of company that creates compounding value over decades, not quarters.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CONTACT
+     ═══════════════════════════════════════ -->
+<section class="contact-section" id="contact">
+  <div class="section-inner">
+    <h2 class="section-title">Let's Talk</h2>
+    <p class="section-desc">Industrial partners, compute customers, and capital partners seeking reliable, clean infrastructure.</p>
+    <a href="mailto:founder@atlasindustrial.ai" class="contact-email">founder@atlasindustrial.ai</a>
+    <a href="tel:+18179071713" class="contact-phone">(817) 907-1713</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════ -->
+<footer>
+  <div>© 2026 Atlas Industrial. All rights reserved.</div>
+  <div>Colleyville, Texas</div>
+</footer>
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════ -->
+<script>
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+  document.querySelectorAll('#navLinks a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.remove('open');
+    });
+  });
+</script>
+
+
+
+
+</body>
+</html>
